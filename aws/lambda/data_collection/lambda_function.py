@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import csv
 import boto3
 import os
+import datetime
 
 def extract_property_data(html_content):
     import re
@@ -68,7 +69,12 @@ def function_handler(event, context):
     write_property_data_to_csv(properties, csv_filename)
 
     s3_bucket_name = 'dhanyals-lambda-zips'
-    s3_object_key = 'property_data.csv'
+
+    # Generate a timestamp
+    timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+
+    # Modify the object key to include the timestamp
+    s3_object_key = f'property_data_{timestamp}.csv'
 
     upload_to_s3(csv_filename, s3_bucket_name, s3_object_key)
 
